@@ -6,32 +6,70 @@ import SearchPage from './SearchPage';
 import * as BooksAPI from './BooksAPI';
 
 class BooksApp extends React.Component {
+
   state = {
-    books: {},
-    typesOfShelves: ['currentlyReading', 'wantToRead', 'read']
+    books: [],
+    resultOfSearch: [],
   }
   componentDidMount() {
+    this.getAllBooks();
+  }
+
+  getAllBooks = () => {
     BooksAPI.getAll().then(books => {
-      const _books = {};
-      for (let i = 0; i < this.state.typesOfShelves.length; i++) {
-        _books[this.state.typesOfShelves[i]] = [];
-        for (let x = 0; x < books.length; x++) {
-          if (books[x].shelf === this.state.typesOfShelves[i]) {
-            _books[this.state.typesOfShelves[i]].push(books[x]);
-          }
-        }
-      }
-      this.setState(() => ({ books:_books }));
+      this.setState(() => ({ books: books }));
+    })
+    .catch((error) => {
+      console.log(error)
     });
   }
+
+  resetSearchPage = () => {
+    this.setState(() => ({
+      resultOfSearch: [],
+    }))
+  }
+
+  searchBook = (value) => {
+    BooksAPI.search(value).then(res => {
+      if (res) {
+        for (let i = 0; i < res.length; i++) {
+          for (let x = 0; x < this.state.books.length; x++) {
+            if (this.state.books[x].id === res[i].id) {
+              res[i].shelf = this.state.books[x].shelf;
+            }
+          }
+        }
+        this.setState(() => ({
+          resultOfSearch: res,
+        }))
+      } else {
+        this.setState(() => ({
+          resultOfSearch: [],
+        }))
+      }
+
+    }).catch((error) => {
+      console.log(error, "error")
+    });
+  }
+
+  changeShelf = (book, nextShelf) => {
+    book.shelf = nextShelf;
+    this.setState((currentState) => ({
+      books: [...currentState.books.filter(books => books.title !== book.title), book],
+    }))
+    BooksAPI.update(book, nextShelf)
+  }
+
   render() {
     return (
       <div className="app">
-        {this.state.books && <Route exact path="/" render={() => (<BookShelves books={this.state.books} typesOfShelves={this.state.typesOfShelves}/>)}/>}
-        <Route path="/search" render={() => (<SearchPage />)} />
+        {this.state.books && <Route exact path="/" render={() => (<BookShelves books={this.state.books} changeShelf={this.changeShelf} />)} />}
+        <Route path="/search" render={() => (<SearchPage changeShelf={this.changeShelf} resultOfSearch={this.state.resultOfSearch} searchBook={this.searchBook} onNavigate={this.resetSearchPage} />)} />
       </div>
     )
   }
 }
 
-export default BooksApp
+export default BooksApp;

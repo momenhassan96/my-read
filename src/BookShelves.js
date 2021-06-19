@@ -1,33 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import AddNewBook from './AddNewBook';
-import SingleBook from './SingleBook';
+import Shelf from './Shelf';
 
-class BookShelves extends Component {
-    render() {
-        const {books} = this.props;
-        return (
-            <div>
+const BookShelves = (props) => {
+    const { books, changeShelf } = props;
+    const cuurentlyReading = books.filter(type => type.shelf === 'currentlyReading');
+    const wantToRead = books.filter(type => type.shelf === 'wantToRead');
+    const read = books.filter(type => type.shelf === 'read');
+    return (
+        <div>
+            <section>
                 <div className="list-books-title">
                     <h1>MyReads</h1>
                 </div>
-                <div className="list-books-content">
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">TEST</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                <SingleBook />
-                            </ol>
-                        </div>
-                    </div>
-                </div>
+                <Shelf bookData={cuurentlyReading} title={'Currently reading'} changeShelf={changeShelf} />
+                <Shelf bookData={wantToRead} title={'Want To Read'} changeShelf={changeShelf} />
+                <Shelf bookData={read} title={'Read'} changeShelf={changeShelf} />
                 <AddNewBook />
-            </div>
-
-
-        )
-    }
+            </section>
+        </div>
+    )
 }
-
-
-
 export default BookShelves;
