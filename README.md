@@ -22,9 +22,15 @@ To get started developing right away:
 │   └── index.html # DO NOT MODIFY
 └── src
     ├── App.css # Styles for your app. Feel free to customize this as you desire.
-    ├── App.js # This is the root of your app. Contains static HTML right now.
+    ├── App.js # This is the root of your app. Contains static Components displayed depended on Route and all states for all project.
     ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
     ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
+    ├── BookShelves # A Functional Component Contain Filtered Arrays for specific books and passing filtered arrays for Shelf Component.
+    ├── Shelf.js # A Functional Component to display Every Shelf recieved from BookShelves Component and passing every book in filtered array to SingleBook Component.
+    ├── SingleBook.js # A Functional Component to display Every Book recived From Shelf Component.
+    ├── SearchInput.js # A Functional Component to display Search Input.
+    ├── SearchPage.js # A Class Component to handel data recived from Search Input and display Books recived from BackEnd.
+    ├── SelectComponent.js # A Functional Component to display Select Menu
     ├── icons # Helpful images for your app. Use at your discretion.
     │   ├── add.svg
     │   ├── arrow-back.svg
@@ -34,6 +40,41 @@ To get started developing right away:
 ```
 
 Remember that good React design practice is to create new JS files for each component and use import/require statements to include them where they are needed.
+
+## Frontend Functions
+    *[`getAllBooks`](#getAllBooks)
+    *[`resetSearchPage`](#resetSearchPage)
+    *[`searchBook`](#searchBook)
+### `getAllBooks`
+    Method Signature:
+    ```js
+    getAllBooks()
+    ```
+* Function to get data from server and update the state of books.
+
+### `resetSearchPage`
+    ```js
+    resetSearchPage()
+    ```
+* Function to reset the state of Search result.
+
+### `searchBook`
+    ```js
+    searchBook()
+    ```
+* Function  accepted string as a parameter to get result of search from back end and check if the book is already displayed in any shelf or not to update select menu with current shelf and to update tha state.
+
+### `changeShelf`
+    ```js
+    changeShelf()
+    ```
+* Function accept two parameters first one object and second one is string to update the book by new shelf .
+
+### `changeShelf`
+    ```js
+    changeShelf()
+    ```
+* Function accept two parameters first one object and second one is string to update the book by new shelf .
 
 ## Backend Server
 

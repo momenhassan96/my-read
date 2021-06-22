@@ -1,9 +1,10 @@
 import React from 'react'
 import './App.css';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import BookShelves from './BookShelves';
 import SearchPage from './SearchPage';
 import * as BooksAPI from './BooksAPI';
+
 
 class BooksApp extends React.Component {
 
@@ -19,9 +20,9 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then(books => {
       this.setState(() => ({ books: books }));
     })
-    .catch((error) => {
-      console.log(error)
-    });
+      .catch((error) => {
+        console.log(error)
+      });
   }
 
   resetSearchPage = () => {
@@ -57,7 +58,7 @@ class BooksApp extends React.Component {
   changeShelf = (book, nextShelf) => {
     book.shelf = nextShelf;
     this.setState((currentState) => ({
-      books: [...currentState.books.filter(books =>books.id !== book.id), book],
+      books: [...currentState.books.filter(books => books.id !== book.id), book],
     }))
     BooksAPI.update(book, nextShelf)
   }
@@ -65,9 +66,13 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        {this.state.books && <Route exact path="/" render={() => (<BookShelves books={this.state.books} changeShelf={this.changeShelf} />)} />}
-        <Route path="/search" render={() => (<SearchPage changeShelf={this.changeShelf} resultOfSearch={this.state.resultOfSearch} searchBook={this.searchBook} onNavigate={this.resetSearchPage} />)} />
+        <Switch>
+          {this.state.books && <Route exact path="/" render={() => (<BookShelves books={this.state.books} changeShelf={this.changeShelf} />)} />}
+          <Route path="/search" render={() => (<SearchPage changeShelf={this.changeShelf} resultOfSearch={this.state.resultOfSearch} searchBook={this.searchBook} onNavigate={this.resetSearchPage} />)} />
+          <Route exact path="*" render={() => (<BookShelves books={this.state.books} changeShelf={this.changeShelf} />)} />
+        </Switch>
       </div>
+
     )
   }
 }
